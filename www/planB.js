@@ -159,7 +159,7 @@ async function sendTrack()
 //Start everything
 window.onload=()=>{
 	//Connect with websocket
-	const ws = new WebSocket(url,"unified-plan");
+	const ws = new WebSocket(url,"plan-b");
 	
 	//Crete transaction manager 
 	const tm = new TransactionManager(ws);
@@ -168,11 +168,7 @@ window.onload=()=>{
 	ws.onopen = async ()=>{
 		
 		//Create new managed pc 
-		pc = new RTCPeerConnection({sdpSemantics:"unified-plan"});
-		
-		//Need to init like this
-		pc.addTransceiver("audio",{direction:"inactive"});
-		pc.addTransceiver("video",{direction:"inactive"});
+		pc = new RTCPeerConnection({sdpSemantics:"plan-b"});
 		
 		//On new remote tracks
 		pc.ontrack	= addRemoteTrack;
@@ -180,7 +176,10 @@ window.onload=()=>{
 		//Add listeneres
 		addTrack.onclick		= ()=> sendTrack();
 		
-		const offer = await pc.createOffer();
+		const offer = await pc.createOffer({
+			offerToReceiveAudio: true,
+			offerToReceiveVideo: true,
+		});
 		await pc.setLocalDescription(offer);
 		const answer = await tm.cmd("offer",{sdp: offer.sdp});
 		pc.setRemoteDescription({type:"answer",sdp:answer.sdp});
