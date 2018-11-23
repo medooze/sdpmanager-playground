@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "medooze-media-server":"^0"
+    "medooze-media-server":"^0",
     "semantic-sdp": "^3",
     "transaction-manager": "^2.1.1",
     "websocket": "^1.0.28"
